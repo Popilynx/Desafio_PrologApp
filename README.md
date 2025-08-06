@@ -79,13 +79,6 @@ Content-Type: application/json
 }
 ```
 
-### Usuários de Exemplo
-
-| Email | Senha | Tipo |
-|-------|-------|------|
-| admin@empresa.com | 123456 | Admin |
-| joao@empresa.com | 123456 | User |
-
 ## 📡 APIs do Sistema
 
 ### 1. Listar todos os veículos
