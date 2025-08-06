@@ -1,0 +1,55 @@
+services:
+  # Banco de dados PostgreSQL
+  postgres:
+    image: postgres:15
+    container_name: desafio-postgres
+    environment:
+      POSTGRES_DB: desafio_veiculos
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/main/resources/db/migration:/docker-entrypoint-initdb.d
+    networks:
+      - desafio-network
+
+  # Interface Web para PostgreSQL
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: desafio-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - desafio-network
+
+  # Aplicação Spring Boot
+  app:
+    build: .
+    container_name: desafio-app
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/desafio_veiculos
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - desafio-network
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  desafio-network:
+    driver: bridge 
